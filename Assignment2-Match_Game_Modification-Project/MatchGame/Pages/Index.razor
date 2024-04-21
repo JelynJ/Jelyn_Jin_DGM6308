@@ -1,0 +1,449 @@
+﻿@page "/"
+@using System.Timers
+@inject IJSRuntime _jsRuntime
+
+<style>
+    .container {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Occupy full viewport height */
+    }
+
+    button {
+        width: 100px;
+        height: 100px;
+        font-size: 50px;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* Initially 4 columns */
+        grid-gap: 10px;
+    }
+</style>
+
+@if (showGameOverModal)
+{
+    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Game Over</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Do you want to play again?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="RestartGame">Yes</button>
+                    <button type="button" class="btn btn-secondary" @onclick="@(() => { showGameOverModal = false; SetFinalScoreText(); })">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+
+<div class="container">
+    <div class="row">
+        <div class="score-container">
+            <h3>Score: @score</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="grid-container" style="grid-template-columns: @gridTemplateColumns">
+            @for (var animalNumber = 0; animalNumber < shuffledAnimals.Count; animalNumber++)
+            {
+                var animal = shuffledAnimals[animalNumber];
+                var uniqueDescription = $"Button #{animalNumber}";
+
+                <div class="col-3">
+                    <button @onclick="@(() => ButtonClick(animal, uniqueDescription))"
+                            type="button" class="btn btn-outline-dark">
+                        <h1>@animal</h1>
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <h3>Matches found: @matchesFound</h3>
+    </div>
+    <div class="row">
+        <h3>@timeDisplay</h3>
+    </div>
+    <div class="row">
+        <h3>Level: @currentLevel</h3>
+    </div>
+    @if (!string.IsNullOrEmpty(finalScoreText))
+    {
+        <div class="row">
+            <h3>@finalScoreText</h3>
+        </div>
+    }
+</div>
+
+
+@code {
+
+    // A read-only list of animal emojis
+    readonly List<string> animalEmoji = new()
+{
+        "🐺", "🐺",
+        "🐮", "🐮",
+        "🦊", "🦊",
+        "🐱", "🐱",
+        "🦁", "🦁",
+        "🐯", "🐯",
+        "🐹", "🐹",
+        "🎈", "🎈", // remove"🐶",add"🎈"
+        "🐼", "🐼",
+        "🐸", "🐸",
+        "🐧", "🐧",
+        "🐔", "🐔",
+        "🦆", "🦆",
+        "🦚", "🦚",
+        "🦒", "🦒",
+        "🦘", "🦘",
+        "🐘", "🐘",
+        "🐳", "🐳",
+        "🐟", "🐟",
+        "🐠", "🐠",
+        "🐙", "🐙",
+        "🦞", "🦞",
+        "🦐", "🦐",
+        "🐍", "🐍",
+        "🐢", "🐢",
+        "🐊", "🐊",
+        "🦖", "🦖",
+        "🦕", "🦕",
+        "🐉", "🐉",
+        "🦉", "🦉",
+        "🦇", "🦇",
+        "🐝", "🐝",
+        "🐛", "🐛",
+        "🦨", "🦨",
+        "🦡", "🦡",
+        "🦦", "🦦",
+        "🦥", "🦥",
+        "🦙", "🦙",
+        "🐐", "🐐",
+        "🐏", "🐏",
+        "🐎", "🐎",
+        "🐖", "🐖",
+        "🐄", "🐄",
+        "🐃", "🐃",
+        "🐪", "🐪",
+        "🐫", "🐫",
+        "🐈", "🐈",
+        "🐇", "🐇",
+        "🐀", "🐀",
+        "🐁", "🐁",
+        "🐻", "🐻",
+        "🐨", "🐨",
+        "🙈", "🙈",
+        "🙉", "🙉",
+        "🙊", "🙊",
+        "🐒", "🐒",
+        "🐦", "🐦",
+        "🐣", "🐣",
+        "🐥", "🐥",
+        "🦅", "🦅",
+        "🐗", "🐗",
+        "🐴", "🐴",
+        "🦄", "🦄",
+        "🦌", "🦌",
+        "🦝", "🦝",
+        "🐕", "🐕",
+        "🦛", "🦛",
+        "🐡", "🐡",
+        "🦈", "🦈",
+        "🐚", "🐚",
+        "🦋", "🦋",
+        "🐞", "🐞",
+        "🦗", "🦗",
+        "🕷️", "🕷️"
+    };
+
+    int timeLimit = 60; // Time limit for the game
+    List<string> shuffledAnimals; // List to store shuffled animal emojis
+    int matchesFound; // Counter for matches found
+    Timer timer; // Timer for animation
+    int timeRemaining; // Time remaining in the current level
+    string timeDisplay; // String for displaying time
+    string finalScoreText = string.Empty; // String for final score text
+    bool isGameOver; // Flag to indicate if the game is over
+    int timeElapsed; // Time elapsed since the start of the game
+    int score; // Player's score
+    int currentLevel; // Current level of the game
+    bool showGameOverModal; // Flag to show/hide the game over modal
+    string gridTemplateColumns; // CSS grid template columns
+
+
+    private readonly Random random = new(); // Random number generator
+
+    // To Initialize
+    protected override void OnInitialized()
+    {
+        score = 0;
+        timeRemaining = 60; // Start countdown from 60 seconds
+        currentLevel = 1; // Initial level is 1
+        timeElapsed = 0; // Reset the elapsed time to 0
+        isGameOver = false; // Reset the game over flag
+        timeDisplay = $"Time Left: {timeRemaining}"; // Update the time display
+        SetUpGame();
+        SetUpTimer();
+    }
+
+    // To set up the game
+    private void SetUpGame()
+    {
+        // Shuffle the animal emojis and take the required number based on the current level
+        shuffledAnimals = animalEmoji
+            .Take(GetTotalMatchesForCurrentLevel(currentLevel) * 2) // Take the required number of emojis based on the total matches for the current level
+            .OrderBy(item => random.Next()) // Shuffle the emojis using OrderBy with a random key
+            .ToList();
+
+        matchesFound = 0; // Reset matches found to 0
+    }
+
+    // Variables to store the last animal found and its description
+    string lastAnimalFound = string.Empty; // Last animal found
+    string lastDescription = string.Empty; // Description of the last animal found
+
+    int GetTotalMatchesForCurrentLevel(int level)
+    {
+        var gridSize = level * 2 + 2; // Calculate the total number of matches required for the current level
+        return gridSize * gridSize / 2; // Total number of matches = (grid size)^2 / 2
+    }
+
+    // When an animal button is clicked:
+    private void ButtonClick(string animal, string animalDescription)
+    {
+        if (lastAnimalFound == string.Empty)
+        {
+            // First selection of the pair. Remember it.
+            lastAnimalFound = animal;
+            lastDescription = animalDescription;
+
+            timer.Start(); // Start the timer
+        }
+        else if (lastAnimalFound == animal && animalDescription != lastDescription)
+        {
+            // Match found! Reset for next pair.
+            lastAnimalFound = string.Empty;
+
+            // Replace found animals with empty string to hide them.
+            shuffledAnimals = shuffledAnimals
+                .Select(a => a.Replace(animal, string.Empty))
+                .ToList();
+
+            matchesFound++; // Increment the count of found matches
+            score += 10; // Increment score by 10 on a successful match
+
+            if (animal == "🎈")
+            {
+                var randomCallCount = random.Next(1, 4); // Generate a random number between 1 and 3
+                for (int i = 0; i < randomCallCount; i++)
+                {
+                    RemoveRandomEmojis(); // Remove random emojis
+                }
+            }
+
+            CheckLevelCompletion(); // Check if the level is completed
+        }
+        else
+        {
+            lastAnimalFound = string.Empty; // Reset last animal found
+        }
+
+        // Call CheckLevelCompletion() at the end of the function
+        CheckLevelCompletion();
+    }
+
+    // To get a list of emoji pairs to remove
+    private List<string> GetEmojiPairsToRemove()
+    {
+        return shuffledAnimals
+            .Where(emoji => emoji != string.Empty && emoji != "🎈") // Exclude empty strings and balloons, get unique emojis
+            .Distinct()
+            .ToList();
+    }
+
+    // To remove a pair of emojis from the shuffledAnimals list
+    private void RemoveEmojiPair(string emoji)
+    {
+        for (var i = 0; i < shuffledAnimals.Count; i++)
+        {
+            if (shuffledAnimals[i] == emoji)
+            {
+                shuffledAnimals[i] = string.Empty; // Replace the emoji with an empty string
+                break;
+            }
+        }
+
+        for (var i = shuffledAnimals.Count - 1; i >= 0; i--)
+        {
+            if (shuffledAnimals[i] == emoji)
+            {
+                shuffledAnimals[i] = string.Empty; // Replace the emoji with an empty string
+                break;
+            }
+        }
+    }
+
+    // To remove random emojis from the shuffledAnimals list
+    private void RemoveRandomEmojis()
+    {
+        var emojiPairsToRemove = GetEmojiPairsToRemove();
+
+        if (emojiPairsToRemove.Count > 0)
+        {
+            // Select a random emoji pair to remove
+            var randomIndex = random.Next(emojiPairsToRemove.Count);
+            var randomEmoji = emojiPairsToRemove[randomIndex];
+
+            RemoveEmojiPair(randomEmoji); // Remove a random pair of emojis
+
+            matchesFound++; // Increment the count of found matches
+            score += 10; // Increment score by 10
+
+            InvokeAsync(() =>
+            {
+                CheckLevelCompletion(); // Check if the level is completed
+                StateHasChanged(); // Trigger a UI update
+            });
+        }
+    }
+
+    // To set up the timer
+    void SetUpTimer()
+    {
+        timer = new Timer(1000); // Create a new timer with a 1-second interval
+        timer.Elapsed += TimerElapsed; // Subscribe to the Elapsed event
+        timer.Start();
+    }
+
+    // Timer Elapsed Event Handler: To update game state on each tick
+    void TimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        if (!isGameOver) // Check if the game is not over
+        {
+            timeRemaining--; // Decrement the remaining time
+
+            timeDisplay = $"Time Left: {timeRemaining}"; // Update the time display
+
+            if (timeRemaining <= 0) // If the remaining time is zero or less
+            {
+                isGameOver = true; // Set the game over flag
+                timer.Stop();
+                EndGame();
+            }
+
+            InvokeAsync(StateHasChanged); // Trigger a UI update asynchronously
+        }
+    }
+
+    // To end game
+    void EndGame()
+    {
+        timer.Stop();
+        Console.WriteLine($"Game over! Your final score is: {score}"); // Print the game over message and final score to the console
+
+        showGameOverModal = true; // Show the game over modal
+    }
+
+    // To set text of the final score
+    void SetFinalScoreText()
+    {
+        finalScoreText = $"Game over! Your final score is: {score}"; // Set final Score text with the game over message and the final score
+    }
+
+    // To restart game
+    void RestartGame()
+    {
+        showGameOverModal = false; // Hide the game over modal
+        finalScoreText = string.Empty; // Reset final score text
+        currentLevel = 1; // Reset the level to 1
+        gridTemplateColumns = "repeat(4, 1fr)"; // Reset grid columns to initial state
+        OnInitialized(); // Reset the game state by calling OnInitialized
+    }
+
+    // To add extra time
+    void AddExtraTime()
+    {
+        timeRemaining += 2; // Add 2 seconds to the remaining time
+        UpdateTimeDisplay();
+    }
+
+    // To update time display
+    void UpdateTimeDisplay()
+    {
+        StateHasChanged(); // Trigger a UI update
+    }
+
+    // To load next level
+    void LoadNextLevel()
+    {
+        currentLevel++; // Advance to the next level
+        matchesFound = 0; // Reset matches found
+        timeRemaining = 60 - (currentLevel - 1) * 5; // Reduce time for higher levels
+        lastAnimalFound = string.Empty; // Reset last animal found
+        lastDescription = string.Empty; // Reset last description
+        GenerateRandomGrid(currentLevel);
+        ResetTimer();
+        StateHasChanged(); // Trigger a UI update
+    }
+
+    // To generate random grid
+    void GenerateRandomGrid(int level)
+    {
+        var gridSize = level * 2 + 2; // Calculate the total number of matches required for the current level
+
+        gridTemplateColumns = $"repeat({gridSize}, 1fr)"; // Update grid columns based on the current grid size
+
+        int totalEmojisNeeded = gridSize * gridSize; // Calculate the total number of emojis needed
+        shuffledAnimals = animalEmoji
+        .Take(GetTotalMatchesForCurrentLevel(currentLevel) * 2) // Take the required number of emojis based on the total matches for the current level
+        .OrderBy(item => random.Next()) // Shuffle the emojis using OrderBy with a random key
+        .ToList();
+
+        InvokeAsync(StateHasChanged); // Trigger a UI update
+    }
+
+    private async Task UpdateGridLayoutAsync(string gridTemplateColumns)
+    {
+        await _jsRuntime.InvokeVoidAsync("updateGridLayout", gridTemplateColumns); // Invoke the updateGridLayout JavaScript function with the provided gridTemplateColumns value
+    }
+
+    // To reset timer
+    void ResetTimer()
+    {
+        timeRemaining = 60 - (currentLevel - 1) * 5; // Adjust time remaining based on the level
+        timeDisplay = $"Time Left: {timeRemaining}"; // Update the time display
+        timer.Stop();
+        timer.Start();
+    }
+
+    // To check level completion
+    void CheckLevelCompletion()
+    {
+        int totalMatches = GetTotalMatchesForCurrentLevel(currentLevel); // Get the total number of matches required for the current level
+
+        // Check if the number of matches found is greater than or equal to the total matches required
+        if (matchesFound >= totalMatches)
+        {
+            timer.Stop();
+
+            // Invoke the LoadNextLevel method asynchronously and trigger a UI update
+            InvokeAsync(() =>
+            {
+                LoadNextLevel();
+                StateHasChanged(); // Trigger a UI update
+            });
+        }
+    }
+
+}
