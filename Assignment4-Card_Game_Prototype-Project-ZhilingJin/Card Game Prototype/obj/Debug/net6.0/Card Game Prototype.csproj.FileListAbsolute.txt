@@ -1,0 +1,30 @@
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.deps.json
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.runtimeconfig.json
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.pdb
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.csproj.AssemblyReference.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.GeneratedMSBuildEditorConfig.editorconfig
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.AssemblyInfoInputs.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.AssemblyInfo.cs
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.csproj.CoreCompileInputs.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/refint/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.pdb
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.genruntimeconfig.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Card Game Prototype/Card Game Prototype/obj/Debug/net6.0/ref/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.deps.json
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.runtimeconfig.json
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/bin/Debug/net6.0/Card Game Prototype.pdb
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.csproj.AssemblyReference.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.GeneratedMSBuildEditorConfig.editorconfig
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.AssemblyInfoInputs.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.AssemblyInfo.cs
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.csproj.CoreCompileInputs.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/refint/Card Game Prototype.dll
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.pdb
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/Card Game Prototype.genruntimeconfig.cache
+/Applications/Study/Spring2024/DGM6308/Jelyn_Jin_DGM6308/Assignment4-Card_Game_Prototype-Project-ZhilingJin/Card Game Prototype/obj/Debug/net6.0/ref/Card Game Prototype.dll
